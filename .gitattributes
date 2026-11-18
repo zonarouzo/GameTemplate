@@ -1,0 +1,7 @@
+# テキストファイルの改行をLFに統一する
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.mp3 binary
+*.ogg binary

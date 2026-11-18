@@ -1,0 +1,24 @@
+/* 画面全体をゲームに使う。スマホ（アプリ化後も含む）で余計なスクロールや拡大が起きないようにする */
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #1b1d3a;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+#app {
+  position: fixed;
+  inset: 0;
+  /* スマホのノッチ（切り欠き）や角の丸みを避ける */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+canvas {
+  display: block;
+  touch-action: none; /* タッチでのスクロール・拡大を止める */
+}
