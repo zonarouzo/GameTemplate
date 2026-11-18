@@ -42,8 +42,10 @@
 │   ├── design.md      … ゲーム企画書（ルール・画面・やりたいこと）
 │   ├── credits.md     … 素材の出典
 │   └── android.md     … Android アプリ化メモ（代表者向け）
-└── tools/
-    └── check.js       … 動作確認スクリプト（Claude が使う）
+├── tools/
+│   └── check.js       … 動作確認スクリプト（Claude が使う）
+└── templates/
+    └── reward-ad/     … リワード広告の仮組み用部品（ハウス広告）。使うときに www/ へコピーする
 ```
 
 ---
@@ -73,7 +75,30 @@
 - 出典や利用条件がわからない素材は使わず、作者に確認する。
 - 画像は PNG / JPG / WebP、音は MP3 / OGG を使い、ファイルが大きくなりすぎないようにする。
 
-### 4-4. 企画書（docs/design.md）
+### 4-4. リワード広告（仮組みはハウス広告で）
+「広告を見ると報酬がもらえる」機能（リワード広告）を作ることになったら、**本物の広告サービスは入れず、`templates/reward-ad/` のハウス広告で仮組みする。**
+本物の広告（AdMob など）への差し替えは、代表者が Android アプリにするときに行う。
+
+- 組み込み方
+  1. `templates/reward-ad/reward_ad.js` を `www/reward_ad.js` に、`templates/reward-ad/house_ad.jpg` を `www/assets/images/house_ad.jpg` にコピーする（中身は変えない）。
+  2. `www/index.html` で、ゲームの JavaScript より前に `<script src="reward_ad.js"></script>` を読み込む。
+  3. 広告を出す場面で、次のように呼ぶ。広告が出ているあいだは、ゲームを一時停止する。
+     ```
+     RewardAd.show({
+       onReward: function () { /* 報酬を渡す */ },
+       onClose: function (rewarded) { /* ゲームを再開する。rewarded は報酬を渡したかどうか */ }
+     });
+     ```
+  4. `docs/credits.md` に「`www/assets/images/house_ad.jpg`｜画像｜チーム（けんちくぶ）提供のハウス広告｜チーム内で利用可」を記録する。
+  5. `docs/design.md` に、どの場面で広告を出し、何がもらえるかを書く。
+- 部品の動き（変えない）
+  - 画像をタップすると `https://caitakenchikuclub.github.io/` を別の画面で開く。
+  - 5秒たつと × で閉じられる（閉じると報酬あり）。
+  - 5秒たつ前に「戻る」（Android の戻るボタン・ブラウザの戻る・Esc キー）を押すと、報酬がもらえない旨の確認が出て、途中でやめることができる（報酬なし）。
+  - 動きを変えたいと作者に頼まれたときは、`templates/` の元の部品は変えず、作者に確認したうえで `www/reward_ad.js` 側を直す。
+- 動作見本：`templates/reward-ad/demo.html`
+
+### 4-5. 企画書（docs/design.md）
 - ゲームを作る・直す前に `docs/design.md` を読み、内容に沿って作業する。
 - 作者と新しく決めたこと（ルール・操作・画面など）は、`docs/design.md` に書き足す。
 - 作者の依頼が企画書と食い違う場合は、どちらに合わせるか確認する。
